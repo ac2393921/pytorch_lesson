@@ -1,5 +1,5 @@
 import torch
-
+import numpy as np
 
 # GPUかCPUかの設定
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -40,3 +40,20 @@ x = torch.empty(size=(1, 5)).normal_(mean=0, std=1)
 x = torch.empty(size=(1, 5)).uniform_(0, 1)
 
 x = torch.diag(torch.ones(3))
+
+# 他の型に変換
+tensor = torch.arange(4)
+print(tensor.bool())
+print(tensor.short())
+print(tensor.long())
+print(tensor.half())
+print(tensor.float())
+print(tensor.double())
+
+# numpy配列<-->tensor に変換
+np_array = np.zeros((5, 5))
+tensor = torch.from_numpy(np_array)
+np_array_back = tensor.numpy()
+
+print(np_array)
+print(tensor)
