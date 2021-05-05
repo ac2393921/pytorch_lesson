@@ -18,7 +18,7 @@ def train(model, input_size, num_classes, learning_rate, num_epochs, train_loade
     :param train_loader: trainデータセット
     :return model: モデル
     """
-    model = model(input_size=input_size, num_classes=num_classes).to(device)
+    model = model(num_classes=num_classes, input_size=input_size).to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -29,7 +29,8 @@ def train(model, input_size, num_classes, learning_rate, num_epochs, train_loade
             targets = targets.to(device)
 
             # 次元を変換
-            data = data.reshape(data.shape[0], -1)
+            if model.__class__.__name__ == 'NN':
+                data = data.reshape(data.shape[0], -1)
 
             # forward
             score = model(data)
@@ -65,13 +66,15 @@ def check_accuracy(loader, model):
         for x, y in loader:
             x = x.to(device)
             y = y.to(device)
-            x = x.reshape(x.shape[0], -1)
+
+            if model.__class__.__name__ == 'NN':
+                x = x.reshape(x.shape[0], -1)
 
             scores = model(x)
             _, predictions = scores.max(1)
             num_correct += (predictions == y).sum()
             num_samples += predictions.size(0)
 
-        print(f"Got {num_correct} / {num_samples} with accuracy {float(num_correct)/float(num_samples)*100:.2f}")
+        print(f"{model.__class__.__name__}: Got {num_correct} / {num_samples} with accuracy {float(num_correct)/float(num_samples)*100:.2f}")
 
     model.train()

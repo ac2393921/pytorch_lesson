@@ -1,6 +1,7 @@
 import torch
 
-from model import NN
+from model.nn import NN
+from model.cnn import CNN
 from dataset import load_mnist
 from train import train, check_accuracy
 
@@ -17,9 +18,12 @@ num_epochs = 1
 
 def main():
     train_loader, test_loader = load_mnist(batch_size=batch_size)
-    model = train(NN, input_size, num_classes, learning_rate, num_epochs, train_loader)
-    check_accuracy(train_loader, model)
-    check_accuracy(test_loader, model)
+    nn = train(NN, input_size, num_classes, learning_rate, num_epochs, train_loader)
+    cnn = train(CNN, input_size, num_classes, learning_rate, num_epochs, train_loader)
+    check_accuracy(train_loader, nn)
+    check_accuracy(test_loader, nn)
+    check_accuracy(train_loader, cnn)
+    check_accuracy(test_loader, cnn)
 
 
 if __name__ == '__main__':
